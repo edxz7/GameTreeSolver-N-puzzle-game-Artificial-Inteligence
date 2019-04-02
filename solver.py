@@ -26,6 +26,8 @@ from pathlib import Path
 #******************************************************************************/
 
 
+# How does this code works?, look at the end to learn
+
 class Solver(object):
     '''
     A class created to solve the 8-puzzle using a min priority queue and the 
@@ -163,3 +165,50 @@ solver = Solver(board)
 print("# of move to solve the board: "+  str(solver.number_of_moves()))
 for solutions in solver:
     print(solutions)
+
+# ------------------------------------------------------------
+# To solve any given game board a game tree is build with the initial 
+# board as the root of the tree
+
+# Breafly the solution is based on:
+
+# A* algorithm -> to minimize f (cost function) where f = g + h
+# g = number of moves (goal distance)
+# h = manhattan or hamming distance (heuristic distance)
+
+# We define the "neighbor" of a board as exactly the same board but 
+# with the  blank tile swap one place to the left, rigth, up or bottom. 
+# For example :
+    
+# Initial board                                       "neighbors"
+#    9  7  4                  9  0  4          9  7  4          9  7  4         9  7  4
+#    1  0  3         ->       1  7  3          0  1  3          1  3  0         1  6  3
+#    2  6  5                  2  6  5          2  6  5          2  6  5         2  0  5
+
+
+# If we denote with n1, n2 and n3 as the "neighbours" of the initial board 
+# and we assume n2 has the lowest h  value.
+
+#                                number of
+#                                  moves             Game Tree
+# _______________________________________________________________
+#     MinPQ                          0             initial board
+#     -----                                              |
+#     -----                                          /   |    \
+#   n1-----                                         /    |     \
+#   n3-----   node with              1             n1    n2    n3
+#   n2----- <- lowest                                    ^
+#              f cost                                    |
+#                                    2          n1, n2, and n3 are
+#                                    .          added into the minPQ
+# The MinPQ always has the           .          but n2 will be pop
+# board with lower f cost            .          in the next step
+# ready to be dequeued on            .          then its neightbours
+# each iteration. Other              .          will be added and
+# added boards with slightly                    ordered by its f 
+# higher f cost are "waiting"                   cost. This process 
+# its turn to be dequeued            .          is repeated until 
+#                                    .          the goal is reached
+#    
+#                                   
+# the number of moves increases on each level of the game tree   
