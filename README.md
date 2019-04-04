@@ -15,7 +15,7 @@ algorithms work. The solver.py can work using either: the included minPQ.py or u
 
 You can create your own boards using either: the included random generator in the solver.py file
 
-(a snipet of the code inside solver.py)
+(a snippet of the code inside solver.py)
 ```python
 // code away!
 n = 3   # size of the board
@@ -25,7 +25,7 @@ blocks = [[a[n*i+j] for j in range(n)] for i in range(n) ]
 where n sets the size of the board **or** you can create your own files in .txt and save them in the source_data folder.
 To solve those board you can use the following part of the code (also include in solver.py):
 
-(a snipet of the code inside solver.py)
+(a snippet of the code inside solver.py)
 ```python
 data_folder = Path("source_data/")
 file_to_open = data_folder / "puzzle05.txt"
