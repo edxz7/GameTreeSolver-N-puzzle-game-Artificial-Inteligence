@@ -6,6 +6,11 @@
 > Code to solve the N-puzzle game (best known as the 8 puzzle game) using a min priority queue and the A* search algorithm.
 > This problem is a classic problem in artificial intelligence
 
+You can put any board you want to solve and the program will solve it (if it has solution) and show you the steps to follow to reach the solution:
+
+Example:
+
+<img src = "source_data/output.png" width="500">
 
 ## Getting Started 
 
