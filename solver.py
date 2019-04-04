@@ -146,19 +146,21 @@ class Solver(object):
             return self.cost_function == other.cost_function 
 
 # Uncomment to create the game board game from a random generator
-n = 3   # size of the board
-a = list(random.sample(range(n*n),n*n))  
-blocks = [[a[n*i+j] for j in range(n)] for i in range(n) ]
+# n = 3   # size of the board
+# a = list(random.sample(range(n*n),n*n))  
+# blocks = [[a[n*i+j] for j in range(n)] for i in range(n) ]
 
 # Uncomment to create the board game reading from a file
 data_folder = Path("source_data/")
-file_to_open = data_folder / "puzzle05.txt"
+file_to_open = data_folder / "puzzle04.txt"
 f = open(file_to_open)
 n = int(f.readline())
 blocks = [[ int(el) for el in line.split()] for line in f ]
 
 board = Board(blocks)
+# print("initial board")
 # print(board)
+# print("------")
 solver = Solver(board)
 
 # Check if the board is solvable and if so, show how to solve it
@@ -167,6 +169,7 @@ for solutions in solver:
     print(solutions)
 
 # ------------------------------------------------------------
+# About the code and the integration of the algorithms used
 # To solve any given game board a game tree is build with the initial 
 # board as the root of the tree
 
