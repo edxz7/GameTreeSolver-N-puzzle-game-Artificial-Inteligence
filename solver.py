@@ -8,9 +8,11 @@ from pathlib import Path
 #  Execution:    python solver.py 
 #  Dependencies: none
 #
-#  Game tree solver. From the initial boar game as the root of the tree, a game 
-#  tree is constructed. Using a min priority queue and the A* algorithm the solution
-#  with the minimum number of moves it's find and printed.
+#  Game tree solver. The initial board is used as the root of a game tree. The child
+#  nodes represents possible configurations of the initial board.
+#  Using a min priority queue and the A* algorithm, this code finds the solution of
+#  the the n-puzzle game with the minimum number of moves and each step in how to reach 
+#  the solution is printed.
 #
 #  You can build your own board of size n x n using the following example format as
 #  an example:
@@ -26,7 +28,54 @@ from pathlib import Path
 #******************************************************************************/
 
 
-# How does this code works?, look at the end to learn
+# #############################################################################/
+# How the algorithm works?
+# To solve any given game board, a game tree is build with the initial 
+# board as the root of the tree
+
+# Breafly the solution is based on:
+
+# A* algorithm -> to minimize f (cost function) where f = g + h
+# g = number of moves (goal distance)
+# h = manhattan or hamming distance (heuristic distance)
+
+# In this code I used the word "neighbors" to reffer to the different configurations of 
+# a board when you swap the blank tile one place to the left, rigth, up or bottom. 
+# For example :
+    
+# Initial board                                       "neighbors"
+#    9  7  4                  9  0  4          9  7  4          9  7  4         9  7  4
+#    1  0  3         ->       1  7  3          0  1  3          1  3  0         1  6  3
+#    2  6  5                  2  6  5          2  6  5          2  6  5         2  0  5
+
+
+# If we denote with n1, n2 and n3 as the "neighbours" of the initial board 
+# and we assume n2 has the lowest h  value.
+#                                number of
+#                                  moves             Game Tree
+# _______________________________________________________________
+#     MinPQ                          0             initial board
+#     -----                                              |
+#     -----                                          /   |    \
+#   n1-----                                         /    |     \
+#   n3-----   node with              1             n1    n2    n3         three different 
+#   n2----- <- lowest                                    ^                configurations
+#              f cost                                    |
+#                                    2          n1, n2, and n3 are
+#                                    .          added into the minPQ
+# The MinPQ always has the           .          but n2 will be pop
+# board with lower f cost            .          in the next step
+# ready to be dequeued on            .          then its neightbours
+# each iteration. Other              .          will be added and
+# added boards with slightly                    ordered by its f 
+# higher f cost are "waiting"                   cost. This process 
+# its turn to be dequeued            .          is repeated until 
+#                                    .          the goal is reached
+#    
+#                                   
+# the number of moves increases on each level of the game tree   
+#
+##############################################################################/z
 
 class Solver(object):
     '''
@@ -42,20 +91,24 @@ class Solver(object):
 
     def __init__(self, boardGame):
         self.board = boardGame
-        self.moves = 0
-        self.solutions = []
-        self.__solve()
-
+        self.moves = 0             # counter to count the moves required to reach the solution
+        self.solutions = []        
+        self.__solve()             # remember with the _ and __ we want to express this variables
+                                   # should be considered as private
     def __solve(self): 
         state = 0
-        search_node =  self.SearchNode(self.board,state,None)
-        seeker_node = self.aStar(search_node)              
-        # Uncomment if you want use my code for the min prority queue intead of the one
-        # provided in the heapq library
-        # pq = minPQ.MinPQ()
+        search_node =  self.SearchNode(self.board,state,None)  # initial search node 
+        seeker_node = self.aStar(search_node)                  # the search node is inmediately 
+                                                               # wrapped with the aStar class and
+                                                               # its methods
+        
+        # Uncomment if you want to use my code for the min prority queue intead of the one
+        # provided by the heapq library
+        # pq = minPQ.MinPQ()             # you can use this minPQ instead and compare which is faster
         # pq.insert(seeker_node)
-        # Uncomment the two lines below to implement min heap queue provided by the heapq
-        # library 
+
+        # Uncomment the two lines below to implement min heap queue provided by the heapq library
+
         pq = []                  # the heapq library requires an empty list to build the heap  
         heappush(pq,seeker_node) # and push the first element into this empty list using heappush 
         i = 0
@@ -63,11 +116,11 @@ class Solver(object):
             # seeker_node = pq.delMin()   # uncomment if you are using the minPQ
             seeker_node = heappop(pq)     # uncomment if you are using the heapq library
             search_node = seeker_node.get_Search_Node()
-            old_search_node = search_node
-            state = old_search_node.state + 1
-
-            if(search_node.link == None): predecessor = None
-            else: predecessor = search_node.link.current
+            old_search_node = search_node       # We keep the previous move because inside this node there are 
+            state = old_search_node.state + 1   # an internal counter. state help us to keep track the internal  
+                                                # counter of the node
+            if(search_node.link == None): predecessor = None  # if there isn't any link to another node, this node 
+            else: predecessor = search_node.link.current      # doesn't have a predecessor
             # Uncomment for debbuging    
             # print("Step: " + str(i))
             # print("Priority " + str(seeker_node.get_priority()))
@@ -78,14 +131,14 @@ class Solver(object):
             # print('----------')
             # print("neighbours")
 
-            # Game tree loop
+            # Game tree loop. We itarete through the neighbors 
             for neighbour in search_node.current.neighbors():
-                if(not (neighbour == predecessor)):
+                if(not (neighbour == predecessor)):  # to avoid repetitions the current neighbor must be different to the previous configuration
                     # print(neighbour)
                     search_node = self.SearchNode(neighbour,state,old_search_node)
                     branch = self.aStar(search_node)
                     # pq.insert(branch)
-                    heappush(pq,branch)
+                    heappush(pq,branch)  
             i += 1
             if(old_search_node.current.is_goal()): break
         # uncomment to know how many iteretions were required to find the solution
@@ -167,51 +220,3 @@ solver = Solver(board)
 print("# of move to solve the board: "+  str(solver.number_of_moves()))
 for solutions in solver:
     print(solutions)
-
-# ------------------------------------------------------------
-# About the code and the integration of the algorithms used
-# To solve any given game board a game tree is build with the initial 
-# board as the root of the tree
-
-# Breafly the solution is based on:
-
-# A* algorithm -> to minimize f (cost function) where f = g + h
-# g = number of moves (goal distance)
-# h = manhattan or hamming distance (heuristic distance)
-
-# We define the "neighbor" of a board as exactly the same board but 
-# with the  blank tile swap one place to the left, rigth, up or bottom. 
-# For example :
-    
-# Initial board                                       "neighbors"
-#    9  7  4                  9  0  4          9  7  4          9  7  4         9  7  4
-#    1  0  3         ->       1  7  3          0  1  3          1  3  0         1  6  3
-#    2  6  5                  2  6  5          2  6  5          2  6  5         2  0  5
-
-
-# If we denote with n1, n2 and n3 as the "neighbours" of the initial board 
-# and we assume n2 has the lowest h  value.
-
-#                                number of
-#                                  moves             Game Tree
-# _______________________________________________________________
-#     MinPQ                          0             initial board
-#     -----                                              |
-#     -----                                          /   |    \
-#   n1-----                                         /    |     \
-#   n3-----   node with              1             n1    n2    n3
-#   n2----- <- lowest                                    ^
-#              f cost                                    |
-#                                    2          n1, n2, and n3 are
-#                                    .          added into the minPQ
-# The MinPQ always has the           .          but n2 will be pop
-# board with lower f cost            .          in the next step
-# ready to be dequeued on            .          then its neightbours
-# each iteration. Other              .          will be added and
-# added boards with slightly                    ordered by its f 
-# higher f cost are "waiting"                   cost. This process 
-# its turn to be dequeued            .          is repeated until 
-#                                    .          the goal is reached
-#    
-#                                   
-# the number of moves increases on each level of the game tree   
