@@ -49,7 +49,7 @@ from pathlib import Path
 
 
 # For further ilustration, we called n1, n2 and n3 to the "neighbours" of the initial board 
-# and we assume n2 has the lowest h  value in the following diagram:
+# and we assume n2 has the lowest h value in the following diagram:
 #
 #                                number of
 #                                iterations             Game Tree
@@ -61,20 +61,20 @@ from pathlib import Path
 #   n3-----   node with              1             n1    n2    n3         three different 
 #   n2----- <- lowest                                    ^                configurations
 #              f cost                                    |
-#                                    2          n1, n2, and n3 are
-#                                    .          added into the minPQ
-# The MinPQ always has the           .          but n2 will be pop
-# board with lower f cost            .          in the next step,
-# ready to be dequeued on            .          then its neightbours
-# each iteration. Other              .          will be added again into 
-# added boards with slightly                    the minPQ and ordered by  
-# higher f cost are "waiting"                   its f cost. This process 
-# its turn to be dequeued            .          is repeated until 
-#                                    .          the goal is reached
+#                                    2          n1, n2, and n3 are added
+#                                    .          into the minPQ but n2 will 
+# The MinPQ always has the           .          be pop in the next step,
+# board with lower f cost            .          then its neightbours will be
+# ready to be dequeued on            .          added again into the minPQ 
+# each iteration. Other              .          and ordered by its f cost 
+# added boards with slightly                    taking into account n1 and n3.
+# higher f cost are "waiting"                   This process is repeated until 
+# its turn to be dequeued            .          the goal is reached (if it exist)  
+#                                    .           
 #    
 #                                   
 # the number of iterations increases on each level of the game tree. The number of   
-# moves in the other hand is recorder internally in the node object in this implementation
+# moves is recorded internally in the node object in this implementation
 ##############################################################################/z
 
 class Solver(object):
@@ -93,14 +93,14 @@ class Solver(object):
         self.board = boardGame
         self.moves = 0             # counter to count the moves required to reach the solution
         self.solutions = []        
-        self.__solve()             # remember with the _ and __ we want to express this variables
-                                   # should be considered as private
+        self.__solve()             # remember the _ and __ expresses my intent of declare this 
+                                   # variables as private
     def __solve(self): 
         state = 0
-        search_node =  self.SearchNode(self.board,state,None)  # initial search node 
-        seeker_node = self.aStar(search_node)                  # the search node is inmediately 
-                                                               # wrapped with the aStar class and
-                                                               # its methods
+        search_node =  self.SearchNode(self.board,state,None)  # Create a search node (basically it's a linked list)
+        seeker_node = self.aStar(search_node)                  # I wrapped inmediately the initial search node
+                                                               # with the aStar class and its methods
+                                                               
         
         # Uncomment if you want to use my code for the min prority queue intead of the one
         # provided by the heapq library
@@ -112,13 +112,13 @@ class Solver(object):
         pq = []                  # the heapq library requires an empty list to build the heap  
         heappush(pq,seeker_node) # and push the first element into this empty list using heappush 
         i = 0
-        while(True):
-            # seeker_node = pq.delMin()   # uncomment if you are using the minPQ
+        while(True): # the seeker node is a search node with the A* methods
+            # seeker_node = pq.delMin()   # uncomment if you are using the minPQ.py file
             seeker_node = heappop(pq)     # uncomment if you are using the heapq library
             search_node = seeker_node.get_Search_Node()
             old_search_node = search_node       # We keep the previous move because inside this node there are 
-            state = old_search_node.state + 1   # an internal counter. state help us to keep track the internal  
-                                                # counter of the node
+            state = old_search_node.state + 1   # an internal counter that help us to keep track the number  
+                                                # of moves for a particular node
             if(search_node.link == None): predecessor = None  # if there isn't any link to another node, this node 
             else: predecessor = search_node.link.current      # doesn't have a predecessor
             # Uncomment for debbuging    
@@ -142,10 +142,12 @@ class Solver(object):
             i += 1
             if(old_search_node.current.is_goal()): break
         # uncomment to know how many iteretions were required to find the solution
-        print("iterations " + str(i))
-        #From the goal board 
-        self.moves = state       
-        search_node = search_node.link
+        # print("iterations " + str(i))
+
+        # Once we found the goal board we used its link to retieve all the previous
+        # steps and we store them in a list
+        self.moves = state    # udate the number of moves   
+        search_node = search_node.link 
         while(search_node != None):          
             self.solutions.append(search_node.current)
             search_node = search_node.link
