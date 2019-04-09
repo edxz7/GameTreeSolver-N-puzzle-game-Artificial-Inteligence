@@ -22,18 +22,22 @@ class Board(object):
                     self.Manhattan += abs(i-(entry-1)//self.n) + abs(j-((entry-1)%self.n))
                     if (entry != self.n*i + j + 1): self.Hamming+=1
 
+    
     def dimension(self):
+        '''Size of the board game'''
         return self.n
 
     def manhattan(self):
+        '''Manhattan distance'''
         return self.Manhattan
     def hamming(self):
+        '''Hamming distance'''
         return self.Hamming
-    def twin(self):
-        pass
+
     def inversions(self):
         pass
     def is_goal(self):
+        '''Determine when a given board is the goal board'''
         for i in range(0,self.n*self.n - 1):
             if(self.board[i] != i+1): return False
         return True
@@ -42,6 +46,7 @@ class Board(object):
         return self.board
     
     def __swap(self,Idx,nIdx):
+        '''Swap one valid place the blank tile'''
         neighbour = [[self.board[i*self.n + j] for j in range(self.n)] for i in range(self.n)]
         i, j =  Idx // self.n , Idx % self.n
         l, m = nIdx // self.n,  nIdx % self.n
@@ -50,6 +55,7 @@ class Board(object):
         neighbour[l][m] = 0
         return neighbour
 
+    ##Overload the comparisson methods
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
@@ -65,6 +71,7 @@ class Board(object):
 
     # Iterate through the possibles bottom, up, left and right blank tiles moves (we called them neighbors)
     def neighbors(self):
+        '''Return the neighbors of a given board'''
         #search where the blank space is placed
         idx = self.board.index(0)
         #create a neighboard list
