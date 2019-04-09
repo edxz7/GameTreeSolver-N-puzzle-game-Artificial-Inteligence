@@ -16,9 +16,7 @@ Example:
 
 ## Getting Started 
 
-The repository also contains the implementetions of a min and max priority queues with useful comments if you want to know how these
-algorithms work. The solver.py can work using either: the included minPQ.py or using min priority queue from the python library 
-```heapq```. Read the comments inside the files for further information
+The repository also contains the implementetions of a min and max priority queues with useful comments if you want to know how these algorithms work. The solver.py can work using either: the included minPQ.py or using the min priority queue from the python library ```heapq```. Read the comments inside the files for further information
 
 You can create your own boards using either: the included random generator in the solver.py file
 
@@ -29,8 +27,7 @@ n = 3   # size of the board
 a = list(random.sample(range(n*n),n*n))  
 blocks = [[a[n*i+j] for j in range(n)] for i in range(n) ]
 ```
-where n sets the size of the board **or** you can create your own files in .txt and save them in the source_data folder.
-To solve those board you can use the following part of the code (also include in solver.py):
+where n sets the size of the board. If you choose this option you only need change the value of n **or** you can create your own files in .txt and save them in the source_data folder. To solve those board you can use the following part of the code (also include in solver.py):
 
 (a snippet of the code inside solver.py)
 ```python
@@ -41,7 +38,7 @@ n = int(f.readline())
 blocks = [[ int(el) for el in line.split()] for line in f ]
 ```
 To know how to build your own boards in the right format, read the comments inside solver.py.
-Uncomment any one of those sections depending in how you want to supply the boards
+Uncomment any one of above lines of code depending in how you want to supply the boards
 
 ---
 
