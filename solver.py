@@ -11,11 +11,10 @@ from pathlib import Path
 #  Game tree solver. The initial board is used as the root of a game tree. The child
 #  nodes represents possible configurations of the initial board.
 #  Using a min priority queue and the A* algorithm, this code finds the solution of
-#  the the n-puzzle game with the minimum number of moves and each step in how to reach 
-#  the solution is printed.
+#  the the n-puzzle game with the minimum number of moves and prints the steps you 
+#  need to follow to reach the soltion in the real life.
 #
-#  You can build your own board of size n x n using the following example format as
-#  an example:
+#  You can build your own board of size n x n using the following example:
 #  
 #  3
 #  9  7  3
@@ -39,8 +38,8 @@ from pathlib import Path
 # g = number of moves (goal distance)
 # h = manhattan or hamming distance (heuristic distance)
 
-# In this code I used the word "neighbors" to reffer to the different configurations of 
-# a board when you swap the blank tile one place to the left, rigth, up or bottom. 
+# In this code I used the word "neighbors" to named the different possible configurations  
+# for a board when you swap the blank tile one place to the left, rigth, up or bottom. 
 # For example :
     
 # Initial board                                       "neighbors"
@@ -49,10 +48,11 @@ from pathlib import Path
 #    2  6  5                  2  6  5          2  6  5          2  6  5         2  0  5
 
 
-# If we denote with n1, n2 and n3 as the "neighbours" of the initial board 
-# and we assume n2 has the lowest h  value.
+# For further ilustration, we called n1, n2 and n3 to the "neighbours" of the initial board 
+# and we assume n2 has the lowest h  value in the following diagram:
+#
 #                                number of
-#                                  moves             Game Tree
+#                                iterations             Game Tree
 # _______________________________________________________________
 #     MinPQ                          0             initial board
 #     -----                                              |
@@ -64,17 +64,17 @@ from pathlib import Path
 #                                    2          n1, n2, and n3 are
 #                                    .          added into the minPQ
 # The MinPQ always has the           .          but n2 will be pop
-# board with lower f cost            .          in the next step
+# board with lower f cost            .          in the next step,
 # ready to be dequeued on            .          then its neightbours
-# each iteration. Other              .          will be added and
-# added boards with slightly                    ordered by its f 
-# higher f cost are "waiting"                   cost. This process 
+# each iteration. Other              .          will be added again into 
+# added boards with slightly                    the minPQ and ordered by  
+# higher f cost are "waiting"                   its f cost. This process 
 # its turn to be dequeued            .          is repeated until 
 #                                    .          the goal is reached
 #    
 #                                   
-# the number of moves increases on each level of the game tree   
-#
+# the number of iterations increases on each level of the game tree. The number of   
+# moves in the other hand is recorder internally in the node object in this implementation
 ##############################################################################/z
 
 class Solver(object):
