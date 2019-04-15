@@ -12,7 +12,6 @@ Example:
 
 <img src = "source_data/output.png" width="500">
 
-* If you found helpful this content, give me a start they are free!, in that way I know if this code was useful for someone
 
 ## Getting Started 
 
