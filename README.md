@@ -6,7 +6,7 @@
 > Code to solve the N-puzzle game (best known as the 8 puzzle game) using a min priority queue and the A* search algorithm.
 > This problem is a classic problem in artificial intelligence
 
-You can put any board you want to solve and the program will solve it (if it has solution) and show you the steps to follow to reach the solution:
+Use any board in the specified fortmat and the program will solve it (if it has a solution) and show you the steps get the solution:
 
 Example:
 
@@ -26,7 +26,7 @@ n = 3   # size of the board
 a = list(random.sample(range(n*n),n*n))  
 blocks = [[a[n*i+j] for j in range(n)] for i in range(n) ]
 ```
-where n sets the size of the board. If you choose this option you only need change the value of n **or** you can create your own files in .txt and save them in the source_data folder. To solve those board you can use the following part of the code (also include in solver.py):
+where n is the size of the board. If you choose this option, change the value of n **or** you can create your own files in .txt formst and save them in the source_data folder. To solve those board you can use the following part of the code (also included in solver.py):
 
 (a snippet of the code inside solver.py)
 ```python
@@ -43,7 +43,7 @@ Uncomment any one of above lines of code depending in how you want to supply the
 
 ## Installation
 
-- All the `code` and test cases required to get started are already included in this repo 
+- All the `code` and test cases required to get started, are already included in this repo 
 
 
 ---
